@@ -6,36 +6,35 @@ import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
-api.interceptors.request.use(async config => {
-  // const token = getToken();
+api.interceptors.request.use(async (config) => {
+  const token = getToken();
 
-  // Verificação, caso haja autenticação com JWT no backend
-  // if (token) {
-  //   config.headers.Authorization = `Bearer ${token}`; // eslint-disable-line no-param-reassign
-  // }
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`; // eslint-disable-line no-param-reassign
+  }
 
   return config;
 });
 
 api.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     const { response = {} } = error;
     const { data } = response;
 
-    if (data) {
-      toast.warn(`Opss... ${data}`, {
+    if (data?.error) {
+      toast.warn(`Opss... ${data?.error}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 8000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        pauseOnFocusLoss: false
+        pauseOnFocusLoss: false,
       });
     }
     return Promise.reject(error);
@@ -43,4 +42,3 @@ api.interceptors.response.use(
 );
 
 export default api;
-©
