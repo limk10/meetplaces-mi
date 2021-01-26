@@ -1,25 +1,43 @@
 import React from "react";
-import Routes from "~/routes";
-import { createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
+import { CssBaseline, Container } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+
 import { BrowserRouter } from "react-router-dom";
 
+import Appbar from "~/components/Appbar";
 import GlobalStyle from "~/assets/css/global";
+import { isAuthenticated } from "~/services/auth";
+import Routes from "~/routes";
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#5958A6"
-    }
-  }
+      main: "#3C8E65",
+    },
+  },
 });
 
 const App = () => {
+  if (!isAuthenticated())
+    return (
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Routes />
+        </ThemeProvider>
+      </BrowserRouter>
+    );
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <Routes />
+        <div style={{ minHeight: "100vh", backgroundColor: "#FCFCFC" }}>
+          <Appbar />
+          <Container style={{ paddingTop: 20 }} maxWidth="lg">
+            <GlobalStyle />
+            <Routes />
+          </Container>
+        </div>
       </ThemeProvider>
     </BrowserRouter>
   );
