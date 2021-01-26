@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { isAuthenticated } from "~/services/auth";
 
@@ -12,13 +12,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       rest={{ ...rest }}
-      render={props =>
+      render={(props) =>
         isAuthenticated() ? (
           <Component props={{ ...props }} />
         ) : (
-          <Redirect
-            to={{ pathname: "/signin", state: { from: props.location } }}
-          />
+          <Redirect to={{ pathname: "/", state: { from: props.location } }} />
         )
       }
     />
@@ -40,6 +38,5 @@ PrivateRoute.propTypes = {
   component: PropTypes.any,
   location: PropTypes.any,
 };
-
 
 export default Routes;
