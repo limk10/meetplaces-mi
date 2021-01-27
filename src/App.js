@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CssBaseline, Container } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
@@ -31,13 +31,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <div style={{ minHeight: "100vh", backgroundColor: "#FCFCFC" }}>
-          <Appbar />
-          <Container style={{ paddingTop: 20 }} maxWidth="lg">
-            <GlobalStyle />
-            <Routes />
-          </Container>
-        </div>
+        <Appbar />
+        <Container style={{ paddingTop: 20 }} maxWidth="xl">
+          <GlobalStyle />
+          <Routes />
+        </Container>
       </ThemeProvider>
     </BrowserRouter>
   );
