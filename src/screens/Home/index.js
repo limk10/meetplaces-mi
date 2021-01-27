@@ -6,15 +6,21 @@ import Map from "~/components/Map";
 
 import useStyles from "./styles";
 
+import LocationList from "./components/LocationList";
+import FilterMap from "./components/Filter";
+
 const Home = () => {
   const classes = useStyles();
 
   return (
-    <Grid container className={classes.root} spacing={2}>
-      <Grid item xs={6}>
-        aaa
+    <Grid className={classes.root} container spacing={2}>
+      <Grid item xs={3}>
+        <FilterMap />
       </Grid>
-      <Grid item xs={6}>
+      <Grid className={classes.locationList} item xs={5}>
+        <LocationList />
+      </Grid>
+      <Grid item xs={4}>
         <Map />
       </Grid>
     </Grid>
