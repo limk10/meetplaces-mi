@@ -41,7 +41,11 @@ const LocationList = () => {
       setLoading(true);
       const { lat, lng } = currentLocation;
       const params = `nearbysearch/json?location=${lat},${lng}&radius=1500&type=restaurant&language=pt-BR&key=${process.env.REACT_APP_API_KEY}`;
-      const { data } = await api.get(process.env.REACT_APP_GOOGLE_API + params);
+      const { data } = await api.get(
+        "https://cors-anywhere.herokuapp.com/" +
+          process.env.REACT_APP_GOOGLE_API +
+          params
+      );
 
       const { results, next_page_token } = data;
 
