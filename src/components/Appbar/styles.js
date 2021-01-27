@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   menu: {
-    fontSize: "0.9rem",
+    fontSize: "0.9rem !important",
     cursor: "pointer",
     padding: "17px 8px 17px 8px",
     transition: "all .2s ease-in-out",
@@ -41,10 +41,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   appBar: {
-    color: "#8C8B8E",
-    backgroundColor: "#FFFFFF",
-    boxShadow: "none",
-    borderBottom: "1px solid #F2F2F2",
+    color: "#8C8B8E !important",
+    backgroundColor: "#FFFFFF !important",
+    boxShadow: "none !important",
+    borderBottom: "1px solid #F2F2F2 !important",
   },
   menuIcon: {
     borderRight: "1px solid #F2F2F2",

@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 30,
   },
   textField: {
-    marginBottom: theme.spacing(2),
+    marginBottom: `${theme.spacing(2)}px !important`,
   },
   buttonProgress: {
     position: "absolute",
