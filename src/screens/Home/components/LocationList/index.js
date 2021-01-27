@@ -18,6 +18,8 @@ import api from "~/services/api";
 
 import actionsLocations from "~/actions/locations";
 
+let map;
+
 const LocationList = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -40,16 +42,27 @@ const LocationList = () => {
     try {
       setLoading(true);
       const { lat, lng } = currentLocation;
-      const params = `nearbysearch/json?location=${lat},${lng}&radius=1500&type=restaurant&language=pt-BR&key=${process.env.REACT_APP_API_KEY}`;
-      const { data } = await api.get(
-        "https://cors-anywhere.herokuapp.com/" +
-          process.env.REACT_APP_GOOGLE_API +
-          params
-      );
 
-      const { results, next_page_token } = data;
+      var latLng = new google.maps.LatLng(lat, lng);
 
-      dispatch(actionsLocations.addPlaces(results));
+      map = new window.google.maps.Map(document.getElementById("map"), {
+        center: latLng,
+        zoom: 15,
+      });
+
+      var request = {
+        location: latLng,
+        radius: "3000",
+        type: ["restaurant"],
+      };
+
+      let service = new window.google.maps.places.PlacesService(map);
+
+      service.nearbySearch(request, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          dispatch(actionsLocations.addPlaces(results));
+        }
+      });
     } catch (error) {
     } finally {
       setLoading(false);
@@ -58,9 +71,7 @@ const LocationList = () => {
 
   const getImageReference = (photos) => {
     if (photos?.length) {
-      const photoReference = photos[0].photo_reference;
-      const params = `photo?maxwidth=400&photoreference=${photoReference}&key=${process.env.REACT_APP_API_KEY}`;
-      return process.env.REACT_APP_GOOGLE_API + params;
+      return photos[0].getUrl() + "&key=" + process.env.REACT_APP_API_KEY;
     } else {
       return "";
     }

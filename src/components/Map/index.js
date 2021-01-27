@@ -5,9 +5,11 @@ import { Typography, LinearProgress } from "@material-ui/core";
 
 import useStyles from "./styles";
 
+import actionsLocations from "~/actions/locations";
+
 import GoogleMapReact from "google-map-react";
 
-import actionsLocations from "~/actions/locations";
+import Marker from "~/components/Marker";
 
 function MapWrapper() {
   const classes = useStyles();
@@ -16,6 +18,10 @@ function MapWrapper() {
 
   const currentLocation = useSelector(
     (state) => state.reducerLocations.addCurrentLocation || {}
+  );
+
+  const locations = useSelector(
+    (state) => state.reducerLocations.addPlaces || {}
   );
 
   useEffect(() => {
@@ -37,7 +43,6 @@ function MapWrapper() {
         },
         (e) => {
           setLoading(false);
-          console.log("erro", e);
         }
       );
     }
@@ -66,8 +71,22 @@ function MapWrapper() {
           }}
           defaultCenter={currentLocation}
           defaultZoom={14}
-        ></GoogleMapReact>
+          esIWantToUseGoogleMapApiInternals
+        >
+          {!!locations.length &&
+            locations.map((place) => {
+              return (
+                <Marker
+                  key={place?.reference}
+                  text={place?.name}
+                  lat={place?.geometry.location.lat()}
+                  lng={place?.geometry.location.lng()}
+                />
+              );
+            })}
+        </GoogleMapReact>
       )}
+      <div id="map" />
     </div>
   );
 }
