@@ -10,13 +10,20 @@ export default createGlobalStyle`
     font: inherit;
     vertical-align: baseline;
   }
+  /* body{
+    background-color: #FCFCFC;
+    height: 100vh;
+  }
+
+  #app div{
+    height: 100%
+  } */
+  html, body, #root, .App {
+    height: 100%;
+  }
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     display: block;
-  }
-  body {
-    line-height: 1;
-    height: 100vh;
   }
   ol, ul {
     list-style: none;
