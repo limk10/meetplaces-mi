@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dividerMenu: {
-    fontSize: "1rem",
+    fontSize: "1rem !important",
     padding: "15px",
   },
   divider: {
