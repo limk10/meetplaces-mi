@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     cursor: "pointer",
     padding: "12px",
+    paddingLeft: "0px",
     color: theme.palette.primary.main,
     "&:hover": {
       color: "#2d6b4c",
