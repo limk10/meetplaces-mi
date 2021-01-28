@@ -53,12 +53,13 @@ function MapWrapper() {
             setLocalLoading(false);
           },
           (e) => {
+            console.log(JSON.stringify(e));
             setLocalLoading(false);
           }
         );
       }
     } catch (error) {
-      console.log(error);
+      console.log(JSON.stringify(error));
       setLocalLoading(false);
     }
   };
