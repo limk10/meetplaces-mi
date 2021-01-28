@@ -9,63 +9,11 @@ import actionsLocations from "~/actions/locations";
 
 import GoogleMapReact from "google-map-react";
 
-const getInfoWindowString = (place) => `
-    <div>
-      <div style="font-size: 16px;">
-        ${place.name}
-      </div>
-      <div style="font-size: 14px;">
-        <span style="color: grey;">
-        ${place.rating}
-        </span>
-        <span style="color: orange;">${String.fromCharCode(9733).repeat(
-          Math.floor(place.rating)
-        )}</span><span style="color: lightgrey;">${String.fromCharCode(
-  9733
-).repeat(5 - Math.floor(place.rating))}</span>
-      </div>
-      <div style="font-size: 14px; color: grey;">
-        ${place.types[0]}
-      </div>
-      <div style="font-size: 14px; color: grey;">
-        ${"$".repeat(place.price_level)}
-      </div>
-      <div style="font-size: 14px; color: green;">
-        ${place?.opening_hours?.isOpen() ? "Aberto" : "Fechado"}
-      </div>
-    </div>`;
-
-// Refer to https://github.com/google-map-react/google-map-react#use-google-maps-api
-const handleApiLoaded = (map, places) => {
-  const markers = [];
-  const infowindows = [];
-
-  !!places.length &&
-    places.forEach((place) => {
-      markers.push(
-        new window.google.maps.Marker({
-          position: {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-          },
-          map,
-        })
-      );
-
-      infowindows.push(
-        new window.google.maps.InfoWindow({
-          content: getInfoWindowString(place),
-        })
-      );
-    });
-
-  !!markers.length &&
-    markers.forEach((marker, i) => {
-      marker.addListener("click", () => {
-        infowindows[i].open(map, marker);
-      });
-    });
-};
+import {
+  getInfoWindowString,
+  handleApiLoaded,
+  reloadMarkers,
+} from "~/helpers/maps";
 
 function MapWrapper() {
   const classes = useStyles();
@@ -126,7 +74,7 @@ function MapWrapper() {
       )}
       {!localLoading && !!Object.keys(currentLocation).length && (
         <GoogleMapReact
-          ref={map}
+          ref={mapReference}
           bootstrapURLKeys={{
             key: process.env.REACT_APP_API_KEY,
             language: "pt-BR",
