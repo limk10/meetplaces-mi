@@ -1,8 +1,7 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import { IconButton, Menu, MenuItem, Avatar } from "@material-ui/core";
-
-import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import { logout } from "~/services/auth";
 
@@ -10,6 +9,7 @@ import useStyles from "../../styles";
 
 const MenuPerfil = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -22,7 +22,9 @@ const MenuPerfil = () => {
     setAnchorEl(null);
   };
 
-  const handlePerfil = () => {};
+  const handlePerfil = () => {
+    history.push("/perfil");
+  };
 
   return (
     <div className={classes.menuIcon}>
@@ -52,7 +54,7 @@ const MenuPerfil = () => {
         className={classes.menuPerfil}
       >
         <MenuItem onClick={() => handlePerfil()}>Perfil</MenuItem>
-        <MenuItem onClick={() => logout()}>Logout</MenuItem>
+        <MenuItem onClick={() => logout()}>Sair</MenuItem>
       </Menu>
     </div>
   );
