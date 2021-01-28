@@ -59,6 +59,7 @@ const handleApiLoaded = async (map, places) => {
 };
 
 const reloadMarkers = () => {
+  if (!markers.length) return;
   // Loop through markers and set map to null for each
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
