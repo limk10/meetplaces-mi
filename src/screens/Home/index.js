@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Grid } from "@material-ui/core";
+import { Grid, Hidden } from "@material-ui/core";
 
 import Map from "~/components/Map";
 
@@ -14,13 +14,13 @@ const Home = () => {
 
   return (
     <Grid className={classes.root} container spacing={2}>
-      <Grid item xs={3}>
+      <Grid item xs={6} sm={3}>
         <FilterMap />
       </Grid>
-      <Grid className={classes.locationList} item xs={5}>
+      <Grid className={classes.locationList} item xs={6} sm={5}>
         <LocationList />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={0} sm={4}>
         <Map />
       </Grid>
     </Grid>
