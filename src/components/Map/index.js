@@ -9,8 +9,6 @@ import actionsLocations from "~/actions/locations";
 
 import GoogleMapReact from "google-map-react";
 
-import Marker from "~/components/Marker";
-
 const getInfoWindowString = (place) => `
     <div>
       <div style="font-size: 16px;">
