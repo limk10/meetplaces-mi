@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-
+import _ from "lodash";
 import {
   Typography,
   TextField,
@@ -13,6 +13,8 @@ import { signIn } from "~/services/auth";
 
 import useStyles from "../styles";
 
+import { schemaLogIn } from "~/helpers/formValidation";
+
 const SignUp = () => {
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
@@ -23,10 +25,41 @@ const SignUp = () => {
     setForm({ ...form });
   };
 
+  const validateForm = async () => {
+    let errors = {};
+
+    await schemaLogIn
+      .validate(form, { abortEarly: false })
+      .catch(({ inner }) => {
+        inner.map(({ path, message }) => {
+          errors[path] = message;
+        });
+      });
+
+    if (!_.isEmpty(errors)) {
+      Object.keys(errors).map((item) => {
+        toast.warn(`${errors[item]}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          pauseOnFocusLoss: false,
+        });
+      });
+      return errors;
+    }
+  };
+
   const handleRegister = async (e) => {
     try {
       e.preventDefault();
       setLoading(true);
+
+      const isValid = await validateForm();
+      if (isValid !== undefined) return;
 
       const data = {
         email: form?.email,

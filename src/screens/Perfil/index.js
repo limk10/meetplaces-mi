@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import _ from "lodash";
 import {
   Avatar,
   TextField,
@@ -15,6 +16,8 @@ import actionsUser from "~/actions/user";
 
 import api from "~/services/api";
 
+import { schemaPerfil } from "~/helpers/formValidation";
+
 const Perfil = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -22,10 +25,42 @@ const Perfil = () => {
 
   const loggedUser = useSelector((state) => state.reducerUser.addLoggedUser);
 
+  const validateForm = async () => {
+    let errors = {};
+
+    await schemaPerfil
+      .validate(loggedUser, { abortEarly: false })
+      .catch(({ inner }) => {
+        inner.map(({ path, message }) => {
+          errors[path] = message;
+        });
+      });
+
+    if (!_.isEmpty(errors)) {
+      Object.keys(errors).map((item) => {
+        toast.warn(`${errors[item]}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          pauseOnFocusLoss: false,
+        });
+      });
+      return errors;
+    }
+  };
+
   const handleSave = async (e) => {
-    e.preventDefault();
     try {
+      e.preventDefault();
       setLoading(true);
+
+      const isValid = await validateForm();
+      if (isValid !== undefined) return;
+
       await api.put("/users/4", loggedUser);
 
       toast.info(
