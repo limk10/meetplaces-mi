@@ -36,7 +36,7 @@ const LocationList = () => {
   const isLoading = useSelector((state) => state.reducerLoading.handleLoading);
 
   useEffect(() => {
-    getLocationList();
+    if (currentLocation) getLocationList();
   }, [currentLocation]);
 
   const getLocationList = async () => {
@@ -63,11 +63,12 @@ const LocationList = () => {
       service.nearbySearch(request, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           dispatch(actionsLoading.handleLoading(false));
-
           dispatch(actionsLocations.addPlaces(results));
         }
       });
-    } catch (error) {}
+    } catch (error) {
+      dispatch(actionsLoading.handleLoading(false));
+    }
   };
 
   const getImageReference = (photos) => {
@@ -80,11 +81,18 @@ const LocationList = () => {
 
   return (
     <>
-      {/* {isLoading && (
-        <Grid container>
-          <CircularProgress style={{ margin: "0 auto" }} color="primary" />
+      {!isLoading && !!!locations.length && (
+        <Grid item xs={12}>
+          <Typography
+            style={{ textAlign: "center" }}
+            variant="overline"
+            display="block"
+            gutterBottom
+          >
+            Não foi possível carregar suas informações :(
+          </Typography>
         </Grid>
-      )} */}
+      )}
       {!isLoading && !!locations.length && (
         <Grid item xs={12}>
           <Typography variant="button" display="block" gutterBottom>
