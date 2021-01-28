@@ -11,10 +11,69 @@ import GoogleMapReact from "google-map-react";
 
 import Marker from "~/components/Marker";
 
+const getInfoWindowString = (place) => `
+    <div>
+      <div style="font-size: 16px;">
+        ${place.name}
+      </div>
+      <div style="font-size: 14px;">
+        <span style="color: grey;">
+        ${place.rating}
+        </span>
+        <span style="color: orange;">${String.fromCharCode(9733).repeat(
+          Math.floor(place.rating)
+        )}</span><span style="color: lightgrey;">${String.fromCharCode(
+  9733
+).repeat(5 - Math.floor(place.rating))}</span>
+      </div>
+      <div style="font-size: 14px; color: grey;">
+        ${place.types[0]}
+      </div>
+      <div style="font-size: 14px; color: grey;">
+        ${"$".repeat(place.price_level)}
+      </div>
+      <div style="font-size: 14px; color: green;">
+        ${place?.opening_hours?.isOpen() ? "Aberto" : "Fechado"}
+      </div>
+    </div>`;
+
+// Refer to https://github.com/google-map-react/google-map-react#use-google-maps-api
+const handleApiLoaded = (map, places) => {
+  const markers = [];
+  const infowindows = [];
+
+  !!places.length &&
+    places.forEach((place) => {
+      markers.push(
+        new window.google.maps.Marker({
+          position: {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          },
+          map,
+        })
+      );
+
+      infowindows.push(
+        new window.google.maps.InfoWindow({
+          content: getInfoWindowString(place),
+        })
+      );
+    });
+
+  !!markers.length &&
+    markers.forEach((marker, i) => {
+      marker.addListener("click", () => {
+        infowindows[i].open(map, marker);
+      });
+    });
+};
+
 function MapWrapper() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false);
+  const [mapReference, setMapReference] = useState();
 
   const currentLocation = useSelector(
     (state) => state.reducerLocations.addCurrentLocation || {}
@@ -28,9 +87,13 @@ function MapWrapper() {
     getCurrentLocation();
   }, []);
 
+  useEffect(() => {
+    handleApiLoaded(mapReference, locations);
+  }, [locations]);
+
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
-      setLoading(true);
+      setLocalLoading(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const pos = {
@@ -39,10 +102,10 @@ function MapWrapper() {
           };
 
           dispatch(actionsLocations.addCurrentLocation({ ...pos }));
-          setLoading(false);
+          setLocalLoading(false);
         },
         (e) => {
-          setLoading(false);
+          setLocalLoading(false);
         }
       );
     }
@@ -50,7 +113,7 @@ function MapWrapper() {
 
   return (
     <div className={classes.mapStyles}>
-      {loading && (
+      {localLoading && (
         <>
           <Typography
             style={{ textAlign: "center" }}
@@ -63,28 +126,18 @@ function MapWrapper() {
           <LinearProgress style={{ width: "50%", margin: "0 auto" }} />
         </>
       )}
-      {!loading && !!Object.keys(currentLocation).length && (
+      {!localLoading && !!Object.keys(currentLocation).length && (
         <GoogleMapReact
+          ref={map}
           bootstrapURLKeys={{
             key: process.env.REACT_APP_API_KEY,
             language: "pt-BR",
           }}
           defaultCenter={currentLocation}
           defaultZoom={14}
-          esIWantToUseGoogleMapApiInternals
-        >
-          {!!locations.length &&
-            locations.map((place) => {
-              return (
-                <Marker
-                  key={place?.reference}
-                  text={place?.name}
-                  lat={place?.geometry.location.lat()}
-                  lng={place?.geometry.location.lng()}
-                />
-              );
-            })}
-        </GoogleMapReact>
+          yesIWantToUseGoogleMapApiInternals
+          onGoogleApiLoaded={({ map }) => setMapReference(map)}
+        />
       )}
       <div id="map" />
     </div>
