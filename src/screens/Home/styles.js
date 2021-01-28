@@ -6,6 +6,13 @@ const useStyles = makeStyles((theme) => ({
     height: "90vh",
     overflow: "auto",
   },
+  btnSearh: {
+    marginBottom: theme.spacing(2),
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
 }));
 
 export default useStyles;
