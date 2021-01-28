@@ -96,9 +96,12 @@ const LocationList = () => {
                 <Card className={classes.root}>
                   <CardActionArea>
                     <CardMedia
+                      height="140"
+                      component="img"
                       className={classes.media}
                       image={getImageReference(value.photos)}
-                      title={getImageReference(value.photos)}
+                      title={`image-${key}`}
+                      alt={`image-${key}`}
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h6" component="h2">
