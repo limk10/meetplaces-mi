@@ -11,19 +11,19 @@ import {
   Grid,
   CircularProgress,
 } from "@material-ui/core";
+import { Rating } from "@material-ui/lab";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 import useStyles from "./styles";
 
-import api from "~/services/api";
-
 import actionsLocations from "~/actions/locations";
+import actionsLoading from "~/actions/loading";
 
 let map;
 
 const LocationList = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [loading, setLoading] = useState(false);
 
   const currentLocation = useSelector(
     (state) => state.reducerLocations.addCurrentLocation || {}
@@ -33,17 +33,19 @@ const LocationList = () => {
     (state) => state.reducerLocations.addPlaces || {}
   );
 
+  const isLoading = useSelector((state) => state.reducerLoading.handleLoading);
+
   useEffect(() => {
     getLocationList();
   }, [currentLocation]);
 
   const getLocationList = async () => {
+    dispatch(actionsLoading.handleLoading(true));
     if (!!!Object.keys(currentLocation).length) return;
     try {
-      setLoading(true);
       const { lat, lng } = currentLocation;
 
-      var latLng = new google.maps.LatLng(lat, lng);
+      var latLng = new window.google.maps.LatLng(lat, lng);
 
       map = new window.google.maps.Map(document.getElementById("map"), {
         center: latLng,
@@ -60,13 +62,12 @@ const LocationList = () => {
 
       service.nearbySearch(request, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
+          dispatch(actionsLoading.handleLoading(false));
+
           dispatch(actionsLocations.addPlaces(results));
         }
       });
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) {}
   };
 
   const getImageReference = (photos) => {
@@ -79,17 +80,17 @@ const LocationList = () => {
 
   return (
     <>
-      {loading && (
+      {/* {isLoading && (
         <Grid container>
           <CircularProgress style={{ margin: "0 auto" }} color="primary" />
         </Grid>
-      )}
-      {!loading && !!locations.length && (
+      )} */}
+      {!isLoading && !!locations.length && (
         <Grid item xs={12}>
           <Typography variant="button" display="block" gutterBottom>
             {locations?.length} Lugares proximos a você :)
           </Typography>
-          <Grid container justify="flex-start" spacing={3}>
+          <Grid container justify="flex-start" spacing={2}>
             {locations.map((value, key) => (
               <Grid key={key} item xs={6}>
                 <Card className={classes.root}>
@@ -97,28 +98,51 @@ const LocationList = () => {
                     <CardMedia
                       className={classes.media}
                       image={getImageReference(value.photos)}
-                      title="image-"
+                      title={getImageReference(value.photos)}
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h6" component="h2">
-                        <img
-                          style={{ marginRight: 5 }}
-                          src={value?.icon}
-                          width={20}
-                          height={20}
+                        {value?.name}
+                      </Typography>
+                      <div style={{ display: "flex", marginBottom: 10 }}>
+                        <Typography
+                          variant="body1"
+                          style={{
+                            marginTop: "2px",
+                          }}
+                        >
+                          {value?.rating}
+                        </Typography>
+                        <Rating
+                          disabled
+                          name="customized-empty"
+                          defaultValue={value?.rating}
+                          precision={0.1}
+                          emptyIcon={<StarBorderIcon fontSize="inherit" />}
                         />
-                        {value?.name?.length >= 25
-                          ? `${value?.name?.slice(0, 25)}...`
-                          : `${value?.name?.slice(0, 25)}`}
+                        <Typography
+                          variant="caption"
+                          display="block"
+                          style={{ marginTop: "3px" }}
+                        >
+                          ({value?.user_ratings_total})
+                        </Typography>
+                      </div>
+                      <Typography variant="body1" gutterBottom>
+                        <b>Preço:</b>{" "}
+                        {value.price_level
+                          ? "$".repeat(value.price_level)
+                          : "-"}
+                      </Typography>
+                      <Typography variant="body1">
+                        {value?.opening_hours?.isOpen() ? "Aberto" : "Fechado"}
                       </Typography>
                       <Typography
                         variant="body2"
                         color="textSecondary"
                         component="p"
                       >
-                        {value?.vicinity?.length >= 40
-                          ? `${value?.vicinity?.slice(0, 40)}...`
-                          : `${value?.vicinity?.slice(0, 40)}`}
+                        {value?.vicinity}
                       </Typography>
                     </CardContent>
                   </CardActionArea>

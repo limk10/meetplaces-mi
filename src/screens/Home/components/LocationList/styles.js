@@ -1,7 +1,9 @@
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    width: "99%",
+  },
   media: {
     height: 140,
   },
