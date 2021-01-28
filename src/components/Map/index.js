@@ -19,7 +19,8 @@ function MapWrapper() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [localLoading, setLocalLoading] = useState(false);
-  const [mapReference, setMapReference] = useState();
+  const [mapReference, setMapReference] = useState({});
+  // const mapReference = React.useRef();
 
   const currentLocation = useSelector(
     (state) => state.reducerLocations.addCurrentLocation || {}
@@ -38,22 +39,27 @@ function MapWrapper() {
   }, [locations]);
 
   const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      setLocalLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const pos = {
-            lat: position?.coords?.latitude,
-            lng: position?.coords?.longitude,
-          };
+    try {
+      if (navigator.geolocation) {
+        setLocalLoading(true);
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const pos = {
+              lat: position?.coords?.latitude,
+              lng: position?.coords?.longitude,
+            };
 
-          dispatch(actionsLocations.addCurrentLocation({ ...pos }));
-          setLocalLoading(false);
-        },
-        (e) => {
-          setLocalLoading(false);
-        }
-      );
+            dispatch(actionsLocations.addCurrentLocation({ ...pos }));
+            setLocalLoading(false);
+          },
+          (e) => {
+            setLocalLoading(false);
+          }
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      setLocalLoading(false);
     }
   };
 
@@ -72,9 +78,20 @@ function MapWrapper() {
           <LinearProgress style={{ width: "50%", margin: "0 auto" }} />
         </>
       )}
+      {!localLoading && !!!Object.keys(currentLocation).length && (
+        <Typography
+          style={{ textAlign: "center" }}
+          variant="overline"
+          display="block"
+          gutterBottom
+        >
+          Não foi possível carregar seu mapa :(
+        </Typography>
+      )}
       {!localLoading && !!Object.keys(currentLocation).length && (
         <GoogleMapReact
           ref={mapReference}
+          id="map"
           bootstrapURLKeys={{
             key: process.env.REACT_APP_API_KEY,
             language: "pt-BR",
