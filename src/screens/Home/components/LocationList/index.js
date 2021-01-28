@@ -81,6 +81,11 @@ const LocationList = () => {
 
   return (
     <>
+      {isLoading && (
+        <Grid container>
+          <CircularProgress style={{ margin: "0 auto" }} color="primary" />
+        </Grid>
+      )}
       {!isLoading && !!!locations.length && (
         <Grid item xs={12}>
           <Typography
@@ -110,6 +115,7 @@ const LocationList = () => {
                       image={getImageReference(value.photos)}
                       title={`image-${key}`}
                       alt={`image-${key}`}
+                      loading="lazy"
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h6" component="h2">
