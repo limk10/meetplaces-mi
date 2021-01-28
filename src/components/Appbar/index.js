@@ -21,12 +21,6 @@ const Navbar = () => {
               <Typography className={classes.menu} variant="h6">
                 Home
               </Typography>
-              <Typography className={classes.dividerMenu} variant="h6">
-                -
-              </Typography>
-              <Typography className={classes.menu} variant="h6">
-                Descubra
-              </Typography>
             </div>
             <div style={{ flexGrow: 1 }} />
             <MenuPerfil />
