@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme) => ({
   formSection: {
     flex: 1,
   },
-  btnEnter: {
-    marginTop: theme.spacing(1.5),
-  },
   registerText: {
     marginTop: 20,
   },
@@ -52,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     marginBottom: `${theme.spacing(2)}px !important`,
+  },
+  btnEnter: {
+    marginTop: theme.spacing(1.5),
   },
   buttonProgress: {
     position: "absolute",
