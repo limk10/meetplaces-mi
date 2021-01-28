@@ -9,10 +9,6 @@ const useStyles = makeStyles((theme) => ({
   btnSearh: {
     marginBottom: theme.spacing(2),
   },
-  wrapper: {
-    margin: theme.spacing(1),
-    position: "relative",
-  },
 }));
 
 export default useStyles;
