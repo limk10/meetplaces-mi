@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { IconButton, Menu, MenuItem, Avatar } from "@material-ui/core";
 
@@ -7,9 +8,29 @@ import { logout } from "~/services/auth";
 
 import useStyles from "../../styles";
 
+import api from "~/services/api";
+
+import actionsUser from "~/actions/user";
+
 const MenuPerfil = () => {
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const loggedUser = useSelector(
+    (state) => state.reducerUser.addLoggedUser || ""
+  );
+
+  useEffect(() => {
+    initUser();
+  }, []);
+
+  const initUser = async () => {
+    try {
+      const { data } = await api.get("/users/4");
+      dispatch(actionsUser.addLoggedUser(data?.data));
+    } catch (error) {}
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -35,7 +56,7 @@ const MenuPerfil = () => {
         onClick={handleMenu}
         color="inherit"
       >
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Avatar alt="Remy Sharp" src={loggedUser?.avatar} />
       </IconButton>
       <Menu
         id="menu-appbar"
