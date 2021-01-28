@@ -20,6 +20,7 @@ export default createGlobalStyle`
   } */
   html, body, #root, .App {
     height: 100%;
+    background-color: #FCFCFC !important
   }
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
