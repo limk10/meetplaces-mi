@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -5,
     marginLeft: -12,
   },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
 }));
 
 export default useStyles;

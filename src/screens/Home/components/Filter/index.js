@@ -117,21 +117,22 @@ const FilterMap = () => {
             </ListItem>
           ))}
         </div>
-
-        <Button
-          className={classes.btnEnter}
-          disabled={isLoading}
-          fullWidth
-          type="submit"
-          variant="contained"
-          color="primary"
-          onClick={(e) => handleSearchLocation(e)}
-        >
-          Pesquisar :)
-        </Button>
-        {isLoading && (
-          <CircularProgress size={24} className={classes.buttonProgress} />
-        )}
+        <div className={classes.wrapper}>
+          <Button
+            className={classes.btnEnter}
+            disabled={isLoading}
+            fullWidth
+            type="submit"
+            variant="contained"
+            color="primary"
+            onClick={(e) => handleSearchLocation(e)}
+          >
+            Pesquisar :)
+          </Button>
+          {isLoading && (
+            <CircularProgress size={24} className={classes.buttonProgress} />
+          )}
+        </div>
       </form>
     </>
   );
