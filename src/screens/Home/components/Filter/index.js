@@ -23,7 +23,7 @@ const FilterMap = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState({
-    tipo: [],
+    type: [],
   });
   const [locationType, setLocationType] = useState([
     { name: "Restaurante", value: "restaurant" },
@@ -38,19 +38,19 @@ const FilterMap = () => {
     (state) => state.reducerLocations.addCurrentLocation || {}
   );
 
-  const handleToggle = (data, value) => {
-    const { tipo } = filter;
-    const currentIndex = tipo.indexOf(data);
-    const newChecked = [...tipo];
+  const handleToggle = (item, value) => {
+    const { type } = filter;
+    const currentIndex = type.indexOf(item);
+    const newChecked = [...type];
 
     if (currentIndex === -1) {
-      newChecked.push(data);
+      newChecked.push(item);
     } else {
       newChecked.splice(currentIndex, 1);
     }
 
     setFilter({
-      tipo: newChecked,
+      type: newChecked,
     });
   };
 
@@ -68,15 +68,16 @@ const FilterMap = () => {
         zoom: 15,
       });
 
-      const { tipo } = filter;
+      const { type } = filter;
+
+      const arrType = [];
+      type.map((item) => arrType.push(item?.value));
 
       var request = {
         location: latLng,
         radius: "3000",
-        type: tipo,
+        type: arrType,
       };
-
-      console.log("->", request);
 
       let service = new window.google.maps.places.PlacesService(map);
 
@@ -102,11 +103,11 @@ const FilterMap = () => {
               key={value}
               role="listitem"
               button
-              onClick={() => handleToggle(item?.name, value)}
+              onClick={() => handleToggle(item, value)}
             >
               <ListItemIcon>
                 <Checkbox
-                  checked={filter?.tipo?.includes(item?.name)}
+                  checked={filter?.type.includes(item)}
                   disableRipple
                   color="primary"
                   inputProps={{ "aria-labelledby": item?.name }}
