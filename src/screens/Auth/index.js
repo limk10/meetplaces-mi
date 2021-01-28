@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Button, Typography, Link, Fade } from "@material-ui/core";
+import { TextField, Button, Typography, Link, Hidden } from "@material-ui/core";
 
 import useStyles from "./styles";
 
@@ -25,13 +25,15 @@ const Login = () => {
       className={`${classes.backgroundContainer} ${classes.centeredContainer}`}
     >
       <div className={`${classes.loginContainer} ${classes.centeredContainer}`}>
-        <div className={classes.artSection}>
-          <img
-            loading="lazy"
-            className={classes.imageIllustration}
-            src={meetIllustration}
-          />
-        </div>
+        <Hidden smDown>
+          <div className={classes.artSection}>
+            <img
+              loading="lazy"
+              className={classes.imageIllustration}
+              src={meetIllustration}
+            />
+          </div>
+        </Hidden>
         <div className={classes.formSection}>
           {!wantRegister && (
             <>
